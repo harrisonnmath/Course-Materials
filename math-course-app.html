@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<!-- This tells the browser that this is a modern HTML5 web page. -->
+<html lang="en">
+<!-- "lang" tells screen readers and browsers that the page is written in English. -->
+
+<head>
+  <!-- This section holds page settings that are not displayed as normal page content. -->
+  <meta charset="UTF-8">
+  <!-- This lets the page display normal letters, punctuation, and math symbols correctly. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- This makes the page resize properly on phones and tablets. -->
+  <title>Math 101 Course Hub</title>
+  <!-- This is the text shown on the browser tab. Change it to your class name. -->
+
+  <style>
+    /* Everything between <style> and </style> controls the app's appearance. */
+
+    /* These reusable color names make it easy to change the class color theme. */
+    :root { --navy:#15213d; --blue:#3569e8; --pale-blue:#eaf0ff; --paper:#ffffff; --page:#f5f7fb; --text:#1b2437; --muted:#687087; --line:#e1e5ef; }
+
+    /* The star selects every element and makes widths easier to calculate. */
+    * { box-sizing:border-box; }
+
+    /* This styles the full webpage. */
+    body { margin:0; background:var(--page); color:var(--text); font-family:Arial, Helvetica, sans-serif; }
+
+    /* This is the main two-column app layout. */
+    .app { min-height:100vh; display:grid; grid-template-columns:235px 1fr; }
+
+    /* This styles the dark navigation area on the left. */
+    aside { background:var(--navy); color:white; padding:28px 18px; }
+
+    /* This styles the course name at the top left. */
+    .brand { margin:0 0 35px; font-size:22px; font-weight:bold; }
+
+    /* This styles the small label above the course name. */
+    .course-label { color:#aebce0; font-size:11px; letter-spacing:1px; text-transform:uppercase; }
+
+    /* This styles the course name in the side panel. */
+    .course-name { margin:7px 0 28px; font-size:14px; line-height:1.4; }
+
+    /* This styles the navigation buttons. */
+    .nav-button { width:100%; margin:4px 0; padding:11px 12px; border:0; border-radius:8px; background:transparent; color:#c7d0ec; cursor:pointer; text-align:left; font-size:14px; }
+
+    /* This changes a navigation button when the mouse is over it. */
+    .nav-button:hover, .nav-button.active { background:rgba(255,255,255,.12); color:white; }
+
+    /* This styles the main content area. */
+    main { max-width:1150px; width:100%; margin:auto; padding:44px; }
+
+    /* This keeps the heading and date on one line when there is enough space. */
+    .heading-row { display:flex; justify-content:space-between; align-items:end; gap:20px; }
+
+    /* This styles the page's main heading. */
+    h1 { margin:0; font-size:36px; letter-spacing:-1px; }
+
+    /* This styles the short description below the heading. */
+    .intro { margin:9px 0 0; color:var(--muted); }
+
+    /* This styles the date text on the right. */
+    .date { color:var(--muted); font-size:13px; }
+
+    /* This styles section headings. */
+    h2 { margin:38px 0 14px; font-size:18px; }
+
+    /* This creates three evenly sized feature cards. */
+    .feature-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:16px; }
+
+    /* This styles each feature card. */
+    .feature-card { min-height:165px; padding:20px; border:1px solid var(--line); border-radius:14px; background:var(--paper); box-shadow:0 3px 10px rgba(30,45,80,.03); }
+
+    /* This creates the round math symbol at the top of each card. */
+    .math-icon { width:42px; height:42px; display:grid; place-items:center; border-radius:10px; background:var(--pale-blue); color:var(--blue); font-size:22px; font-weight:bold; }
+
+    /* This styles each feature-card title. */
+    .feature-card h3 { margin:14px 0 6px; font-size:15px; }
+
+    /* This styles smaller explanatory text. */
+    .feature-card p { margin:0; color:var(--muted); font-size:13px; line-height:1.45; }
+
+    /* This styles the blue action links on the feature cards. */
+    .feature-card a { display:inline-block; margin-top:15px; color:var(--blue); font-size:13px; font-weight:bold; text-decoration:none; }
+
+    /* This puts filters and the instructor reminder on one row. */
+    .materials-toolbar { display:flex; justify-content:space-between; align-items:center; gap:15px; margin-bottom:12px; }
+
+    /* This places the category filter buttons next to each other. */
+    .filters { display:flex; flex-wrap:wrap; gap:8px; }
+
+    /* This styles the category filter buttons. */
+    .filter { padding:7px 12px; border:1px solid var(--line); border-radius:20px; background:white; color:#596278; cursor:pointer; font-size:12px; }
+
+    /* This styles the currently selected category filter. */
+    .filter.active { border-color:var(--navy); background:var(--navy); color:white; }
+
+    /* This styles the reminder box for the instructor. */
+    .instructor-note { color:var(--muted); font-size:12px; }
+
+    /* This is the white box holding the material rows. */
+    .materials { overflow:hidden; border:1px solid var(--line); border-radius:14px; background:white; }
+
+    /* This styles one course-material row. */
+    .material { display:grid; grid-template-columns:43px 1fr 120px 96px; align-items:center; gap:13px; padding:15px 18px; border-bottom:1px solid var(--line); }
+
+    /* This removes the line under the final material. */
+    .material:last-child { border-bottom:0; }
+
+    /* This makes a row slightly blue when students point at it. */
+    .material:hover { background:#fbfcff; }
+
+    /* This styles the file-type label. */
+    .file-type { display:grid; place-items:center; width:34px; height:38px; border-radius:7px; background:#ffebea; color:#b9403c; font-size:10px; font-weight:bold; }
+
+    /* This styles the title of a course material. */
+    .material-title { display:block; font-size:14px; font-weight:bold; }
+
+    /* This styles the file details below a title. */
+    .material-details { display:block; margin-top:4px; color:var(--muted); font-size:12px; }
+
+    /* This styles the category badge. */
+    .tag { justify-self:start; padding:5px 8px; border-radius:6px; background:#f0f3f8; color:#586279; font-size:11px; }
+
+    /* This styles the Download button. */
+    .download { justify-self:end; padding:8px 10px; border:1px solid #c9d4f4; border-radius:7px; background:white; color:#315ed5; font-size:12px; font-weight:bold; text-decoration:none; }
+
+    /* This changes the Download button color when it is pointed at. */
+    .download:hover { background:var(--pale-blue); }
+
+    /* This styles the message shown if no material matches a selected filter. */
+    .empty { padding:35px; color:var(--muted); text-align:center; }
+
+    /* These rules adjust the app for narrow screens, such as phones. */
+    @media (max-width:760px) {
+      .app { grid-template-columns:1fr; }
+      aside { padding:17px; }
+      .brand { margin-bottom:18px; }
+      .course-name { display:none; }
+      nav { display:flex; overflow:auto; }
+      .nav-button { width:auto; white-space:nowrap; }
+      main { padding:25px 18px; }
+      h1 { font-size:29px; }
+      .date { display:none; }
+      .feature-grid { grid-template-columns:1fr; }
+      .materials-toolbar { align-items:flex-start; flex-direction:column; }
+      .material { grid-template-columns:43px 1fr auto; }
+      .tag { display:none; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- This is all of the visible content in the app. -->
+  <div class="app">
+    <!-- This left side panel contains the course name and navigation. -->
+    <aside>
+      <!-- Change "MathShelf" to any name you would like students to see. -->
+      <div class="brand">∑ MathShelf</div>
+      <!-- This label identifies the information below it. -->
+      <div class="course-label">Current course</div>
+      <!-- Change this text to your course code and class name. -->
+      <div class="course-name">MATH 101 · College Algebra</div>
+      <!-- These are visual navigation buttons. The Materials button scrolls to the file list. -->
+      <nav>
+        <button class="nav-button active" type="button">⌂ Overview</button>
+        <button class="nav-button" type="button" onclick="document.getElementById('materials-section').scrollIntoView({behavior:'smooth'})">▤ Course materials</button>
+        <button class="nav-button" type="button" onclick="alert('Add your office hours or contact information here.')">? Get help</button>
+      </nav>
+    </aside>
+
+    <!-- This is the main student-facing area. -->
+    <main>
+      <!-- This row contains the welcome message and a date. -->
+      <div class="heading-row">
+        <div>
+          <!-- Change the heading to a welcome message that suits your class. -->
+          <h1>Welcome to College Algebra.</h1>
+          <!-- Change this to an instruction or announcement for your students. -->
+          <p class="intro">Find lecture notes, practice problems, and assignment resources below.</p>
+        </div>
+        <!-- This is ordinary text; update or remove it whenever you want. -->
+        <div class="date">Course materials hub</div>
+      </div>
+
+      <!-- This heading introduces the three quick-link cards. -->
+      <h2>Start here</h2>
+      <div class="feature-grid">
+        <!-- The first card links to your syllabus file. Replace syllabus.pdf with your real filename or web link. -->
+        <article class="feature-card">
+          <div class="math-icon">π</div>
+          <h3>Course syllabus</h3>
+          <p>Course policies, grading, class schedule, and contact information.</p>
+          <a href="syllabus.pdf" target="_blank">Open syllabus →</a>
+        </article>
+        <!-- The second card links to a lesson video or online resource. Replace # with the video URL. -->
+        <article class="feature-card">
+          <div class="math-icon">▶</div>
+          <h3>Latest lesson</h3>
+          <p>Watch the current lesson again before working on the problem set.</p>
+          <a href="#" target="_blank">Watch lesson →</a>
+        </article>
+        <!-- The third card links to a study guide. Replace week-1-study-guide.pdf with your real filename. -->
+        <article class="feature-card">
+          <div class="math-icon">√</div>
+          <h3>Study guide</h3>
+          <p>Review key formulas, examples, and strategies for the next quiz.</p>
+          <a href="week-1-study-guide.pdf" target="_blank">Open study guide →</a>
+        </article>
+      </div>
+
+      <!-- The id lets the navigation button above scroll students to this section. -->
+      <section id="materials-section">
+        <!-- This heading introduces the complete file list. -->
+        <h2>Course materials</h2>
+        <div class="materials-toolbar">
+          <!-- These buttons let students filter the material list by type. -->
+          <div class="filters">
+            <button class="filter active" type="button" data-filter="All">All</button>
+            <button class="filter" type="button" data-filter="Lecture">Lecture notes</button>
+            <button class="filter" type="button" data-filter="Practice">Practice</button>
+            <button class="filter" type="button" data-filter="Assignment">Assignments</button>
+          </div>
+          <!-- This message reminds you where to make permanent changes. -->
+          <div class="instructor-note">Instructor: edit the material list in the script below.</div>
+        </div>
+        <!-- JavaScript will automatically place material rows inside this empty box. -->
+        <div class="materials" id="material-list"></div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // Everything between <script> and </script> makes the filters and material list work.
+
+    // THIS IS THE MAIN LIST YOU WILL EDIT AS THE INSTRUCTOR.
+    // Each set of braces { } is one course item students can open or download.
+    const materials = [
+      // Change the title, details, category, file type, and URL for this first item.
+      { title: 'Week 1 Lecture Notes: Linear Equations', details: 'PDF document · 1.2 MB', category: 'Lecture', type: 'PDF', url: 'week-1-lecture-notes.pdf' },
+      // Copy a whole line like this to add another resource to your class.
+      { title: 'Practice Set 1: Solving Equations', details: 'PDF worksheet · 420 KB', category: 'Practice', type: 'PDF', url: 'practice-set-1.pdf' },
+      // For a Google Drive, OneDrive, or YouTube link, put the complete https:// address inside the url quotes.
+      { title: 'Homework 1 Instructions', details: 'PDF assignment · 308 KB', category: 'Assignment', type: 'PDF', url: 'homework-1.pdf' },
+      // This is an example of a different type of resource.
+      { title: 'Formula Reference Sheet', details: 'PDF handout · 180 KB', category: 'Practice', type: 'PDF', url: 'formula-sheet.pdf' }
+    ];
+
+    // This remembers which filter button is currently selected. "All" means show every material.
+    let selectedFilter = 'All';
+
+    // This finds the empty material-list box in the page and stores it for later use.
+    const materialList = document.getElementById('material-list');
+
+    // This function creates the visible list of files from the materials list above.
+    function renderMaterials() {
+      // This keeps only materials that match the selected category, unless All is selected.
+      const visibleMaterials = materials.filter(material => selectedFilter === 'All' || material.category === selectedFilter);
+
+      // This checks whether the filter found any matching materials.
+      if (visibleMaterials.length === 0) {
+        // This displays a friendly message if a category has no items yet.
+        materialList.innerHTML = '<div class="empty">No materials have been added to this category yet.</div>';
+        // This stops the function here because there are no material rows to create.
+        return;
+      }
+
+      // This creates one HTML row for each visible material and puts all rows into the page.
+      materialList.innerHTML = visibleMaterials.map(material => `
+        <article class="material">
+          <div class="file-type">${material.type}</div>
+          <div>
+            <span class="material-title">${material.title}</span>
+            <span class="material-details">${material.details}</span>
+          </div>
+          <span class="tag">${material.category}</span>
+          <a class="download" href="${material.url}" target="_blank">Open file</a>
+        </article>
+      `).join('');
+    }
+
+    // This finds every category-filter button on the page.
+    const filterButtons = document.querySelectorAll('.filter');
+
+    // This adds a click action to each category-filter button.
+    filterButtons.forEach(button => {
+      // When a student clicks a filter button, the instructions inside this function run.
+      button.addEventListener('click', () => {
+        // This reads the category name stored in that button's data-filter attribute.
+        selectedFilter = button.dataset.filter;
+        // This removes the dark selected style from every filter button.
+        filterButtons.forEach(item => item.classList.remove('active'));
+        // This adds the dark selected style to the button the student clicked.
+        button.classList.add('active');
+        // This redraws the list so students see only matching materials.
+        renderMaterials();
+      });
+    });
+
+    // This runs once when the page first opens, so students can immediately see all materials.
+    renderMaterials();
+  </script>
+</body>
+</html>
